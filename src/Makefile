@@ -25,7 +25,7 @@
 # SOFTWARE.
 
 CC=gcc
-MISC=-Wall -ggdb
+MISC=-Wall -O2
 
 all: agg
 
@@ -37,6 +37,9 @@ llist.o: llist.c llist.h
 
 agg: main.o llist.o
 	${CC} main.o llist.o -o agg ${MISC}
+
+agg.exe: main.c llist.c llist.h
+	i586-mingw32msvc-gcc main.c llist.c -o agg.exe ${MISC}
 
 test: agg
 	cat test.txt | ./agg

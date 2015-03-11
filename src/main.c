@@ -34,6 +34,10 @@ SOFTWARE.
 #include <errno.h>
 #include "llist.h"
 
+#ifndef LINE_MAX
+#define LINE_MAX                2048 // For Win32
+#endif
+
 void chomp(char *s);
 char *squeeze(char *str);
 
@@ -43,14 +47,14 @@ int main(int argc, char* argv[]) {
 
 	if (argc == 2 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "-H") == 0 || strcmp(argv[1], "--help") == 0)) {
 		printf("Output aggregator. Takes in many lines from standard input, and outputs only unique lines back to standard output.\n");
-		printf("Version 0.2. March 2015. richard.j.zak@gmail.com\n");
+		printf("Version 0.2. March 2015.\nhttps://github.com/rjzak/aggregator\n");
 		return EXIT_SUCCESS;
 	}
 
 	if (argc > 1 && argc < 4 && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-C") == 0)) {
 		printf("Cut off for the input to be stored. Essentially a string split.\n");
 		printf("Use: %s -c <Delimiter> <Index in the resulting array to keep>\n", argv[0]);
-		printf("Version 0.1. March 2015. richard.j.zak@gmail.com\n");
+		printf("Version 0.2. March 2015.\nhttps://github.com/rjzak/aggregator\n");
 		return EXIT_SUCCESS;
 	}
 
