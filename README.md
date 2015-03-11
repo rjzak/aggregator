@@ -36,5 +36,5 @@ Pipe your output to the aggregator, and instead your results will look like this
 
 Changes:
 
-0.2: Support for cutting the text to only get part of the output.
-0.1: Initial release.
+* 0.2: Support for cutting the text to only get part of the output.
+* 0.1: Initial release.
