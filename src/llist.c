@@ -73,21 +73,23 @@ short add_string_recursive(node* n, char* value) {
 	}
 }
 
-void print_list(list* l, FILE* dest) {
+void print_list(list* l, FILE* dest, int min_count) {
 	fprintf(dest, "%d elements\n", l->items);
-	print_node(l->root, dest);
+	print_node(l->root, dest, min_count);
 	fprintf(dest, "\n");
 }
 
-void print_node(node* n, FILE* dest) {
+void print_node(node* n, FILE* dest, int min_count) {
 	if (n == NULL) {
 		fprintf(dest, "END\n");
 		return;
 	}
 
-	fprintf(dest, "\t%s: %d\n", n->string, n->counter);
+	if (n->counter >= min_count)
+		fprintf(dest, "\t%s: %d\n", n->string, n->counter);
+
 	if (n->next != NULL)
-		print_node(n->next, dest);
+		print_node(n->next, dest, min_count);
 }
 
 void list_destroy(list *l) {

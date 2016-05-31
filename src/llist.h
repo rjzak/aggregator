@@ -47,8 +47,8 @@ void list_init(list* l);
 void add_string(list* l, char* value);
 short add_string_recursive(node* n, char* value);
 
-void print_list(list* l, FILE* dest);
-void print_node(node* n, FILE* dest);
+void print_list(list* l, FILE* dest, int min_count);
+void print_node(node* n, FILE* dest, int min_count);
 
 void list_destroy(list *l);
 void node_destroy(node* n);

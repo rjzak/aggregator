@@ -43,28 +43,54 @@ char *squeeze(char *str);
 
 int main(int argc, char* argv[]) {
 	char *delimiter = NULL;
-	int delimiter_index = -1;
+	int delimiter_index = -1, i = 0, min_count = -1;
 
 	if (argc == 2 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "-H") == 0 || strcmp(argv[1], "--help") == 0)) {
 		printf("Output aggregator. Takes in many lines from standard input, and outputs only unique lines back to standard output.\n");
-		printf("Version 0.2. March 2015.\nhttps://github.com/rjzak/aggregator\n");
+		printf("Version 0.3. May 2016.\nhttps://github.com/rjzak/aggregator\n");
+		printf("Usage: %s:\n", argv[0]);
+		printf("\t -c <Delimiter> <Index>: Filter the output string with a split.\n");
+		printf("\t -m <Minimum count>: Specify a minimum count of the result to be displayed.\n");
 		return EXIT_SUCCESS;
 	}
 
 	if (argc > 1 && argc < 4 && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-C") == 0)) {
 		printf("Cut off for the input to be stored. Essentially a string split.\n");
 		printf("Use: %s -c <Delimiter> <Index in the resulting array to keep>\n", argv[0]);
-		printf("Version 0.2. March 2015.\nhttps://github.com/rjzak/aggregator\n");
 		return EXIT_SUCCESS;
 	}
 
-	if (argc == 4 && (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "-C") == 0)) {
-		delimiter = argv[2];
-		errno = 0;
-		delimiter_index = atoi(argv[3]);
-		if (errno == EINVAL || errno == ERANGE) {
-			fprintf(stderr, "Invalid index: %s.\n", argv[3]);
-			return EXIT_FAILURE;
+	if (argc > 1 && argc < 3 && (strcmp(argv[1], "-m") == 0 || strcmp(argv[1], "-M") == 0)) {
+		printf("Only display records which occurred a minimum amount of times.\n");
+		printf("Use: %s -m <Minimum count>: Specify a minimum count of the result to be displayed.\n", argv[0]);
+		return EXIT_SUCCESS;
+	}
+
+	for(i = 0; i < argc - 1; i++) {
+		if (strcmp(argv[i], "-m") == 0 || strcmp(argv[i], "-M") == 0) {
+			errno = 0;
+			min_count = atoi(argv[i+1]);
+			if (errno == EINVAL || errno == ERANGE) {
+				fprintf(stderr, "Invalid integer value: %s.\n", argv[i+1]);
+				return EXIT_FAILURE;
+			}
+			if (min_count < 0) {
+				min_count = 0;
+			}
+		}
+		if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "-C") == 0) {
+			delimiter = argv[i+1];
+			if (i + 2 < argc) {
+				errno = 0;
+				delimiter_index = atoi(argv[i+2]);
+				if (errno == EINVAL || errno == ERANGE) {
+					fprintf(stderr, "Invalid integer value: %s.\n", argv[i+1]);
+					return EXIT_FAILURE;
+				}
+			} else {
+				fprintf(stderr, "Delimiter index not provided.\n");
+				return EXIT_FAILURE;
+			}
 		}
 	}
 
@@ -87,7 +113,8 @@ int main(int argc, char* argv[]) {
 					part = strtok(NULL, delimiter);
 				}
 				//line = part;
-				strcpy(line, part);
+				if (part != NULL)
+					strcpy(line, part);
 			}
 		}
 		chomp(line);
@@ -95,7 +122,7 @@ int main(int argc, char* argv[]) {
 		add_string(&l, line);
 	} // END WHILE
 
-	print_list(&l, stdout);
+	print_list(&l, stdout, min_count);
 
 	list_destroy(&l);
 	return EXIT_SUCCESS;

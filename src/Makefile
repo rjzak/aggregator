@@ -43,6 +43,8 @@ agg.exe: main.c llist.c llist.h
 
 test: agg
 	cat test.txt | ./agg
+	cat test.txt | ./agg -m 4
+	cat test.txt | ./agg -c ":" 1
 
 .phony: clean
 clean:
